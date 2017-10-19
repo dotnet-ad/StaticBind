@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StaticBind.Build\StaticBind.Build.csproj">
-      <Project>{1CB9AAE8-4CB9-44C1-98F9-47B904B3B9A1}</Project>
+      <Project>{80E77DB9-20DB-482E-A6CE-051BB5B35B77}</Project>
       <Name>StaticBind.Build</Name>
     </ProjectReference>
   </ItemGroup>

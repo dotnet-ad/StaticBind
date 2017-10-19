@@ -9,6 +9,6 @@
 
     <Target Class="StaticBind.Sample.Views.iOS.ViewController">
         <Bind From="entryField.Text" To="Entry" When="EventHandler:EditingChanged" />
-    </Source>
+    </Target>
 
 </Bindings>

@@ -13,6 +13,9 @@
 		[XmlElement("Bind")]
 		public List<Bind> Bindings { get; set; }
 
+		[XmlElement("Command")]
+		public List<Command> Commands { get; set; }
+
 		[XmlIgnore]
 		public string ClassName => this.ClassFullname.Split('.').Last();
 

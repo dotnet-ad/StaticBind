@@ -29,6 +29,14 @@
 			this.Source = initial;
 		}
 
+		public Accessor(TSource initial, string name, Func<TSource, TProperty> getter, Action<TSource, TProperty> setter)
+		{
+			this.Name = name;
+			this.Getter = getter;
+			this.setter = setter;
+			this.Source = initial;
+		}
+
 		#endregion
 
 		#region Fields
@@ -217,7 +225,7 @@
 			this.SetValue(value);
 		}
 
-		public Accessor<TSource, TProperty> OnChange(Action<TProperty> onChange)
+		public virtual Accessor<TSource, TProperty> OnChange(Action<TProperty> onChange)
 		{
 			this.ValueChanged += (sender, e) => onChange(e);
 			return this;

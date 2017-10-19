@@ -5,6 +5,9 @@ namespace StaticBind.Build
 	[XmlRoot("Bindings")]
 	public class Bindings
 	{
+		[XmlIgnore]
+		public string File { get; set; }
+
 		[XmlAttribute("Visibility")]
 		public Visibility Visibility { get; set; }
 

@@ -3,7 +3,6 @@
 	using System;
 	using UIKit;
 	using StaticBind.Sample.ViewModels;
-	using Conversions;
 
 	public partial class ViewController : UIViewController
 	{
@@ -32,20 +31,14 @@
 		{
 			base.ViewWillAppear(animated);
 
-			this.Bindings.IsActive = true;
+			this.Bindings.AreActive = true;
 		}
 
 		public override void ViewDidDisappear(bool animated)
 		{
 			base.ViewDidDisappear(animated);
 
-			this.Bindings.IsActive = false;
-		}
-
-		public override void DidReceiveMemoryWarning()
-		{
-			base.DidReceiveMemoryWarning();
-
+			this.Bindings.AreActive = false;
 		}
 	}
 }

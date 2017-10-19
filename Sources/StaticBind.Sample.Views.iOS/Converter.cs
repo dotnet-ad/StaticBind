@@ -1,5 +1,5 @@
 ﻿using System;
-namespace StaticBind.Sample.Views.iOS.Conversions
+namespace StaticBind.Sample.Views.iOS
 {
 	public class Converter
 	{

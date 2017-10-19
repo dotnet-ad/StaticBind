@@ -6,7 +6,7 @@
 	public partial class ViewController
 	{
 		[Bindings]
-		public void InitializeBindings(ViewModels.MainViewModel source, Conversions.Converter converter)
+		public void InitializeBindings(ViewModels.MainViewModel source, StaticBind.Sample.Views.iOS.Converter converter)
 		{
 			this.Bind(() => source.Entry, () => this.entryField.Text)
 			    .Bind(() => source.Header.Title, () => this.Title)

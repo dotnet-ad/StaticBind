@@ -1,0 +1,26 @@
+﻿<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="StaticBind.Build.StaticBindTask" AssemblyFile="StaticBind.Build.dll"/>
+
+  <Target Name="CollectStaticBindFiles" BeforeTargets="StaticBindGenerate">
+    <ItemGroup>
+     <StaticBindFiles Include="@(None)" Condition="$([System.String]::Copy('%(Identity)').EndsWith('.Bind.xml'))"/>
+    </ItemGroup>
+  </Target>
+    
+  <Target Name="StaticBindGenerate" BeforeTargets="CollectGeneratedStaticBindFile" Inputs = "@(StaticBindFiles)" Outputs = "$(IntermediateOutputPath)%(Identity).g.cs">
+    <Message Text="Starting bindings generation ..." Importance="normal"/>
+    <StaticBindTask
+        Source="@(StaticBindFiles)"
+        OutputFile = "$(IntermediateOutputPath)%(Identity).g.cs">
+    </StaticBindTask>
+  </Target>
+
+  <Target Name="CollectGeneratedStaticBindFile" BeforeTargets="BeforeBuild">
+      <ItemGroup>
+        <Compile Include="$(IntermediateOutputPath)**\*.Bind.xml.g.cs" />
+        <Compile Include="$(IntermediateOutputPath)**\*.Bind.cs.g.cs" />
+      </ItemGroup>
+  </Target>
+    
+</Project>
