@@ -136,7 +136,7 @@
 			return false;
 		}
 
-		private void Subscribe()
+		protected virtual void Subscribe()
 		{
 			if (this.value is INotifyPropertyChanged observable && observable != null)
 			{
@@ -149,7 +149,7 @@
 			}
 		}
 
-		private void Unsubscribe()
+		protected virtual void Unsubscribe()
 		{
 			if (this.value is INotifyPropertyChanged observable && observable != null)
 			{

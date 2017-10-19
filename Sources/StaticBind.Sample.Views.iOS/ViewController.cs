@@ -3,10 +3,7 @@
 	using System;
 	using UIKit;
 	using StaticBind.Sample.ViewModels;
-
-	public static partial class Converters
-	{
-	}
+	using Conversions;
 
 	public partial class ViewController : UIViewController
 	{
@@ -16,12 +13,12 @@
 
 		partial void onWholeClick(Foundation.NSObject sender)
 		{
-			this.Bindings.Source.UpdateWhole();
+			this.Bindings.Source.UpdateWhole.Execute(null);
 		}
 
 		partial void onPropertyClick(Foundation.NSObject sender)
 		{
-			this.Bindings.Source.UpdateProperties();
+			this.Bindings.Source.UpdateProperties.Execute(null);
 		}
 
 		public override void ViewDidLoad()

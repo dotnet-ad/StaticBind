@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Xml.Linq;
+using System.Threading.Tasks;
+
 namespace StaticBind.Build.Tests
 {
 	[TestFixture()]
@@ -9,9 +11,10 @@ namespace StaticBind.Build.Tests
 
 		#region Fields
 
-		Parser parser;
+		XmlParser xml;
+		CsharpParser csharp;
 
-		BindingsGenerator generator;
+		CSharpGenerator generator;
 
 		#endregion
 
@@ -20,14 +23,15 @@ namespace StaticBind.Build.Tests
 		[SetUp()]
 		public void Setup()
 		{
-			this.parser = new Parser();
-			this.generator = new BindingsGenerator();
+			this.xml = new XmlParser();
+			this.generator = new CSharpGenerator();
+			this.csharp = new CsharpParser();
 		}
 
 		#endregion
 
 		[Test()]
-		public void TestCase()
+		public void TestCaseXml()
 		{
 			using (var stream = Utils.GenerateStream(@"
 <Bindings Visibility=""Inner"" Converter=""StaticBind.Sample.Views.iOS.Converter"">
@@ -45,9 +49,39 @@ namespace StaticBind.Build.Tests
 
 </Bindings>"))
 			{
-				var result = parser.Parse(stream);
+				var result = xml.Parse(stream);
 				var csharp = generator.Generate(result);
 			}
+		}
+
+		[Test()]
+		public async Task TestCaseCSharp()
+		{
+			using (var stream = Utils.GenerateStream(@"
+namespace StaticBind.Sample.Views.iOS
+{
+	using System;
+	using StaticBind.Descriptors;
+
+	public partial class ViewController
+	{
+		[Bindings]
+		public void InitializeBindings(ViewModels.MainViewModel source, Conversions.Converter converter)
+		{
+			this.Bind(() => source.Entry, () => this.entryField.Text)
+			    .Bind(() => source.Header.Title, () => this.Title)
+				.Bind(() => source.Header.Title, () => this.descriptionLabel.Text)
+			    .Bind(() => source.Header.Date, () => this.dateLabel.Text, Conversion.Value<DateTime,string>(converter.DateToString));
+			
+			this.Bind(() => this.entryField.Text, () => source.Entry, When.Event<System.EventHandler>(nameof(this.entryField.EditingChanged)));
+		}
+	}
+}"))
+			{
+				var result = this.csharp.Parse(stream);
+				var csharp = generator.Generate(result);
+			}
+
 		}
 	}
 }

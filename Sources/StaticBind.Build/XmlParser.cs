@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace StaticBind.Build
 {
-	public class Parser
+	public class XmlParser
 	{
-		public Parser()
+		public XmlParser()
 		{
 		}
 

@@ -18,7 +18,7 @@
 
 		public TTarget Target => this.target.Source;
 
-		public bool IsActive
+		public bool AreActive
 		{
 			get => this.source.IsActive && this.target.IsActive;
 			set

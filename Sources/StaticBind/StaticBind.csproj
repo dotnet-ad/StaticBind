@@ -36,6 +36,12 @@
     <Compile Include="Accessor{TSource}.cs" />
     <Compile Include="ChildAccessor.cs" />
     <Compile Include="Bindings.cs" />
+    <Compile Include="CommandAccessor{TSource,TProperty}.cs" />
+    <Compile Include="Descriptors\BindingDescriptor.cs" />
+    <Compile Include="Descriptors\BindingsAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Descriptors\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

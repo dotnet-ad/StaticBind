@@ -7,6 +7,9 @@
 	{
 		public MainViewModel()
 		{
+			this.UpdateProperties = new RelayCommand(ExecuteUpdateProperties, () => this.Header != null);
+
+			this.UpdateWhole = new RelayCommand(ExecuteUpdateWhole, () => this.Header == null);
 		}
 
 		private string entry;
@@ -28,6 +31,9 @@
 
 					if (state.NewValue != null)
 						state.NewValue.PropertyChanged += OnHeaderPropertyChanged;
+
+					this.UpdateWhole.RaiseCanExecuteChanged();
+					this.UpdateProperties.RaiseCanExecuteChanged();
 				}
 			}
 		}
@@ -40,7 +46,7 @@
 			}
 		}
 
-		public void UpdateWhole()
+		public void ExecuteUpdateWhole()
 		{
 			this.Header = new HeaderItemViewModel()
 			{
@@ -49,7 +55,7 @@
 			};
 		}
 
-		public void UpdateProperties()
+		public void ExecuteUpdateProperties()
 		{
 			if(this.header != null)
 			{
@@ -69,5 +75,9 @@
 				}
 			}
 		}
+
+		public RelayCommand UpdateProperties { get; }
+
+		public RelayCommand UpdateWhole { get; }
 	}
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 namespace StaticBind.Build
 {
-	public class BindingsGenerator : Generator
+	public class CSharpGenerator : Generator
 	{
-		public BindingsGenerator()
+		public CSharpGenerator()
 		{
 		}
 
