@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq.Expressions;
-
-namespace StaticBind
+﻿namespace StaticBind
 {
+	using System;
+	using System.Linq.Expressions;
+
 	public static class AccessorsExtensions
 	{
 		public static Accessor<TSource> CreateAccessor<TSource>(this TSource source)

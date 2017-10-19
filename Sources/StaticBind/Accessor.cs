@@ -7,35 +7,19 @@
 	using System.ComponentModel;
 	using System.Diagnostics;
 
-	public class Accessor<TSource,TProperty> : IAccessor<TSource,TProperty>
+	public class Accessor<TSource, TProperty> : IAccessor<TSource, TProperty>
 	{
-		private static Func<TSource, TProperty> CreateGetter(string name)
-		{
-			var value = Expression.Parameter(typeof(TSource), "value");
-			var getter = Expression.Property(value, name);
-			return Expression.Lambda<Func<TSource, TProperty>>(getter, value).Compile();
-		}
+		#region Constructors
 
-		private static Action<TSource, TProperty> CreateSetter(string name)
+		public Accessor(TSource initial, Expression<Func<TSource, TProperty>> name)
 		{
-			var instance = Expression.Parameter(typeof(TSource));
-			var paramExpression2 = Expression.Parameter(typeof(TProperty), name);
-			var propertyGetterExpression = Expression.Property(instance, name);
-			return Expression.Lambda<Action<TSource, TProperty>>
-			(
-				Expression.Assign(propertyGetterExpression, paramExpression2), instance, paramExpression2
-			).Compile();
-		}
-
-		public Accessor(TSource initial, Expression<Func<TSource,TProperty>> name)
-		{
-			if(name == null)
+			if (name == null)
 			{
 				this.Name = null;
 				this.Getter = (arg) => (TProperty)((object)this.Source);
-				this.setter = (arg,v) => this.Source = (TSource)((object)v);
+				this.setter = (arg, v) => this.Source = (TSource)((object)v);
 			}
-			else 
+			else
 			{
 				var expression = (MemberExpression)name.Body;
 				this.Name = expression.Member.Name;
@@ -44,6 +28,10 @@
 
 			this.Source = initial;
 		}
+
+		#endregion
+
+		#region Fields
 
 		private TSource source;
 
@@ -57,19 +45,62 @@
 
 		private List<Action<TSource>> unsubscribers = new List<Action<TSource>>();
 
+		#endregion
+
+		#region Events
+
 		public EventHandler<TProperty> ValueChanged;
 
 		public EventHandler<bool> IsActiveChanged;
 
-		public bool IsActive 
+		#endregion
+
+		#region Private properties
+
+		private Func<TSource, TProperty> Getter { get; }
+
+		private Action<TSource, TProperty> Setter => this.setter ?? (this.setter = CreateSetter(this.Name));
+
+		#endregion
+
+		#region Public properties
+
+		public string Name { get; }
+
+		public TProperty Value
+		{
+			get => this.value;
+			set
+			{
+				if (this.Source != null && !EqualityComparer<TProperty>.Default.Equals(this.Getter(this.Source), value)) ;
+				this.Setter(this.Source, value);
+				this.SetValue(value);
+			}
+		}
+
+		public TSource Source
+		{
+			get => this.source;
+			set
+			{
+				if (!EqualityComparer<TSource>.Default.Equals(value, this.source))
+				{
+					Debug.WriteLine($"[{this.Name}] Source changed : {value}");
+					this.source = value;
+					this.Evaluate();
+				}
+			}
+		}
+
+		public bool IsActive
 		{
 			get => this.isActive;
 			set
 			{
-				if(this.isActive != value)
+				if (this.isActive != value)
 				{
 					this.isActive = value;
-					if(value)
+					if (value)
 					{
 						this.Subscribe();
 					}
@@ -82,6 +113,10 @@
 			}
 		}
 
+		#endregion
+
+		#region Private methods
+
 		private bool SetValue(TProperty value)
 		{
 			if (!EqualityComparer<TProperty>.Default.Equals(value, this.Value))
@@ -90,7 +125,7 @@
 				Debug.WriteLine($"[{this.Name}] Value changed : {value}");
 				this.IsActive = false;
 				this.value = value;
-				if(wasActive)
+				if (wasActive)
 				{
 					this.IsActive = true;
 				}
@@ -99,37 +134,6 @@
 			}
 
 			return false;
-		}
-
-		public Accessor<TSource, TProperty> OnChange(Action<TProperty> onChange)
-		{
-			this.ValueChanged += (sender, e) => onChange(e);
-			return this;
-		}
-
-		public TProperty Value 
-		{
-			get => this.value;
-			set
-			{
-				if (this.Source != null)
-					this.Setter(this.Source, value);
-				this.SetValue(value);
-			}
-		}
-
-		public TSource Source 
-		{
-			get => this.source; 
-			set
-			{
-				if (!EqualityComparer<TSource>.Default.Equals(value, this.source))
-				{
-					Debug.WriteLine($"[{this.Name}] Source changed : {value}");
-					this.source = value;
-					this.Evaluate();
-				}
-			}
 		}
 
 		private void Subscribe()
@@ -161,10 +165,10 @@
 		private void OnSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (this.ValueChanged != null)
-			{ 
+			{
 				foreach (Delegate handler in this.ValueChanged.GetInvocationList())
 				{
-					if(handler.Target is IAccessor<TProperty> child && child.Name == e.PropertyName)
+					if (handler.Target is IAccessor<TProperty> child && child.Name == e.PropertyName)
 					{
 						child.Evaluate();
 					}
@@ -172,14 +176,36 @@
 			}
 		}
 
-		public Accessor<TSource, TProperty> ChangeWhen(Action<TSource,Action>subscribe, Action<TSource> unsubscribe)
+		private static Func<TSource, TProperty> CreateGetter(string name)
+		{
+			var value = Expression.Parameter(typeof(TSource), "value");
+			var getter = Expression.Property(value, name);
+			return Expression.Lambda<Func<TSource, TProperty>>(getter, value).Compile();
+		}
+
+		private static Action<TSource, TProperty> CreateSetter(string name)
+		{
+			var instance = Expression.Parameter(typeof(TSource));
+			var paramExpression2 = Expression.Parameter(typeof(TProperty), name);
+			var propertyGetterExpression = Expression.Property(instance, name);
+			return Expression.Lambda<Action<TSource, TProperty>>
+			(
+				Expression.Assign(propertyGetterExpression, paramExpression2), instance, paramExpression2
+			).Compile();
+		}
+
+		#endregion
+
+		#region Public methods
+
+		public Accessor<TSource, TProperty> ChangeWhen(Action<TSource, Action> subscribe, Action<TSource> unsubscribe)
 		{
 			this.subscribers.Add(subscribe);
 			this.unsubscribers.Add(unsubscribe);
 
-			if(this.IsActive)
+			if (this.IsActive)
 			{
-				subscribe(this.source,Evaluate);
+				subscribe(this.source, Evaluate);
 			}
 
 			return this;
@@ -187,15 +213,18 @@
 
 		public void Evaluate()
 		{
-			this.SetValue(Getter(this.Source));
+			var value = this.Source != null ? Getter(this.Source) : default(TProperty);
+			this.SetValue(value);
 		}
 
-		public string Name { get; }
+		public Accessor<TSource, TProperty> OnChange(Action<TProperty> onChange)
+		{
+			this.ValueChanged += (sender, e) => onChange(e);
+			return this;
+		}
 
-		private Func<TSource, TProperty> Getter { get; }
+		public void Dispose() => this.IsActive = false;
 
-		private Action<TSource, TProperty> Setter => this.setter ?? (this.setter = CreateSetter(this.Name));
-
-		public void Dispose() => this.Unsubscribe();
+		#endregion
 	}
 }

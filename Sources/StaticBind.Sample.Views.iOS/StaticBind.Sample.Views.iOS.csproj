@@ -104,7 +104,7 @@
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
     <None Include="packages.config" />
-    <None Include="ViewController.bindings" />
+    <None Include="ViewController.bind" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />

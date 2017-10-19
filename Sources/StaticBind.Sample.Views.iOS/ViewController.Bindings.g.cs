@@ -1,55 +1,4 @@
-﻿/*namespace StaticBind.Sample.Views.iOS
-{
-	using System;
-	using StaticBind;
-
-	public partial class ViewController
-	{
-		public Bindings<StaticBind.Sample.ViewModels.MainViewModel, StaticBind.Sample.Views.iOS.ViewController> Bindings { get; private set; }
-
-		public Bindings<StaticBind.Sample.ViewModels.MainViewModel,StaticBind.Sample.Views.iOS.ViewController> Bind(StaticBind.Sample.ViewModels.MainViewModel source, Converter converter)
-		{
-			var t_root = this.CreateAccessor();
-			var s_root = source.CreateAccessor();
-
-			var t_dateLabel = t_root.Then(x => x.dateLabel);
-			var t_dateLabel_text = t_dateLabel.Then(x => x.Text);
-
-			var t_description = t_root.Then(x => x.descriptionLabel);
-			var t_description_text = t_description.Then(x => x.Text);
-
-			var t_entry = t_root.Then(x => x.entryField);
-			EventHandler h_t_entry = null;
-			var t_entry_text = t_entry.Then(x => x.Text).ChangeWhen((x,a) => { h_t_entry = (s, e) => a(); x.EditingChanged += h_t_entry; }, (x) => x.EditingChanged -= h_t_entry) ;
-
-			var s_header = s_root.Then(x => x.Header);
-
-			var s_title = s_header.Then(x => x.Title).OnChange(v =>
-			{
-				t_description_text.Value = v;
-				t_entry_text.Value = v;
-			});
-
-			var s_date = s_header.Then(x => x.Date).OnChange(v =>
-			{
-				t_dateLabel_text.Value = converter.DateToString(v);
-			});
-
-			t_entry_text.OnChange(v =>
-			{
-				s_title.Value = v;
-
-			});
-
-			this.Bindings = new Bindings<StaticBind.Sample.ViewModels.MainViewModel, StaticBind.Sample.Views.iOS.ViewController>(s_root, t_root);
-
-			return this.Bindings;
-		}
-
-
-	}
-}*/
-namespace StaticBind.Sample.Views.iOS
+﻿namespace StaticBind.Sample.Views.iOS
 {
 	using System;
 	using StaticBind;
@@ -86,4 +35,3 @@ namespace StaticBind.Sample.Views.iOS
 		}
 	}
 }
-

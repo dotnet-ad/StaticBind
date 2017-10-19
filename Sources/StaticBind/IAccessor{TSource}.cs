@@ -1,6 +1,7 @@
-﻿using System;
-namespace StaticBind
+﻿namespace StaticBind
 {
+	using System;
+
 	public interface IAccessor<TSource> : IDisposable
 	{
 		string Name { get; }
