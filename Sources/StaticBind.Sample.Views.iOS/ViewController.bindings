@@ -1,0 +1,14 @@
+﻿<Bindings Visibility="Inner" Converter="StaticBind.Sample.Views.iOS.Converter">
+
+    <Source Class="StaticBind.Sample.ViewModels.MainViewModel">
+        <Bind From="Entry" To="entryField.Text" />
+        <Bind From="Header.Date" To="dateLabel.Text" Converter="DateToString" />
+        <Bind From="Header.Title" To="Title" />
+        <Bind From="Header.Title" To="descriptionLabel.Text" />
+    </Source>
+
+    <Target Class="StaticBind.Sample.Views.iOS.ViewController">
+        <Bind From="entryField.Text" To="Header.Entry" When="EventHandler:EditingChanged" />
+    </Source>
+
+</Bindings>
