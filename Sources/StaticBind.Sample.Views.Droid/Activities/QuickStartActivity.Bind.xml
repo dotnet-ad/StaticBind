@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Bindings Visibility="Inner">
+
+    <Source Class="StaticBind.Sample.ViewModels.QuickStartViewModel">
+        <Property From="Title" To="entryField.Text" />
+        <Property From="Title" To="titleLabel.Text" />
+    </Source>
+
+    <Target Class="StaticBind.Sample.Views.Droid.QuickStartActivity">
+        <Property From="entryField.Text" To="Title" When="Android.Text.TextChangedEventArgs:TextChanged" />
+    </Target>
+
+</Bindings>

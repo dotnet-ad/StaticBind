@@ -8,7 +8,7 @@ namespace StaticBind
 	{
 		public static Accessor<TSource> CreateAccessor<TSource>(this TSource source)
 		{
-			return new Accessor<TSource>(source);
+			return new Accessor<TSource>();
 		}
 
 		public static Accessor<TProperty, TSubProperty> Property<TSource, TProperty, TSubProperty>(this Accessor<TSource, TProperty> parent, Expression<Func<TProperty, TSubProperty>> name)

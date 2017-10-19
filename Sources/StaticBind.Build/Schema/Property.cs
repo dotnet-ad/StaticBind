@@ -34,7 +34,11 @@ namespace StaticBind.Build
 				if (splits.Length == 1)
 					return "EventHandler";
 
-				return splits.First();
+				var handler = splits.First();
+				if (handler.EndsWith("EventArgs", System.StringComparison.Ordinal))
+					return $"EventHandler<{handler}>";
+				
+				return handler;
 			}
 		}
 

@@ -1,4 +1,4 @@
-# SB
+![SB](./Documentation/logo.png)
 
 Declare your data bindings and generate compiled code instead of heavily relying on reflection !
 
@@ -8,21 +8,30 @@ Declare your data bindings and generate compiled code instead of heavily relying
 
 **2)** Create a source class from which the data will be pulled (*commonly called a `ViewModel`*).
 
-`ViewModel.cs` *(iOS)*
+`QuickStartViewModel.cs`
 
 ```csharp
 namespace StaticBind.Sample.ViewModels
 {
-	using System;
+	using System.ComponentModel;
 
-	public class ViewModel : Observable, INotifyPropertyChanged
+	public class QuickStartViewModel : INotifyPropertyChanged
 	{
 		private string title = "Initial title";
+
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		public string Title
 		{
 			get => this.title;
-			set => this.Set(ref this.title, value);
+			set 
+			{
+				if(this.title != value)
+				{
+					this.title = value;
+					this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Title)));
+				}
+			}
 		}
 	}
 }
@@ -30,22 +39,21 @@ namespace StaticBind.Sample.ViewModels
 
 **3)** Create a view class which will present data to your user (*for example a ViewController on iOS or an Activity on Android*). This class can contain a set of controls the data can be bound to.
 
-`ViewController.designer.cs` *(Xamarin.iOS)*
+`QuickStartViewController.designer.cs` *(Xamarin.iOS, Android sample in sources)*
 
 ```csharp
 using Foundation;
-using System.CodeDom.Compiler;
 
 namespace StaticBind.Sample.Views.iOS
 {
-	[Register ("ViewController")]
-	partial class ViewController
+	[Register ("QuickStartViewController")]
+	partial class QuickStartViewController
 	{
 		[Outlet]
-		UIKit.UILabel titleLabel { get; set; }
+		UIKit.UITextField entryField { get; set; }
 
 		[Outlet]
-		UIKit.UITextField entryField { get; set; }
+		UIKit.UILabel titleLabel { get; set; }
 		
 		// ...
 	}
@@ -54,17 +62,18 @@ namespace StaticBind.Sample.Views.iOS
 
 **3)** Create a binding file associated to each view class. You can choose between **xml** or **pseudo-c#** (*see the section bellow for more details*) to declare your bindings. Make sure to have `*.Bind.xml` or `*.Bind.cs` suffix.
 
-`*.Bind.xml`
+`QuickStartViewController.Bind.xml` *(Xamarin.iOS, Android sample in sources)*
 
 ```xml
+<?xml version="1.0" encoding="UTF-8" ?>
 <Bindings Visibility="Inner">
 
-    <Source Class="StaticBind.Sample.ViewModels.ViewModel">
+    <Source Class="StaticBind.Sample.ViewModels.QuickStartViewModel">
         <Property From="Title" To="entryField.Text" />
         <Property From="Title" To="titleLabel.Text" />
     </Source>
 
-    <Target Class="StaticBind.Sample.Views.iOS.ViewController">
+    <Target Class="StaticBind.Sample.Views.iOS.QuickStartViewController">
         <Property From="entryField.Text" To="Title" When="EditingChanged" />
     </Target>
 
@@ -76,8 +85,8 @@ namespace StaticBind.Sample.Views.iOS
 You can *attach* your binding file to your view file by adding a `DependentUpon` tag inside your `.csproj`.
 
 ```xml
-<None Include="ViewController.Bind.xml">
-  <DependentUpon>ViewController.cs</DependentUpon>
+<None Include="QuickStartViewController.Bind.xml">
+  <DependentUpon>QuickStartViewController.cs</DependentUpon>
 </None>
 ```
 
@@ -85,7 +94,7 @@ You can *attach* your binding file to your view file by adding a `DependentUpon`
 
 **4)** Initialize and manage bindings lifecycle.
 
-`ViewController.cs` *(Xamarin.iOS)*
+`QuickStartViewController.cs` *(Xamarin.iOS, Android sample in sources)*
 
 ```csharp
 namespace StaticBind.Sample.Views.iOS
@@ -93,16 +102,16 @@ namespace StaticBind.Sample.Views.iOS
 	using System;
 	using UIKit;
 	using StaticBind.Sample.ViewModels;
-	
-	public partial class ViewController : UIViewController
+
+	public partial class QuickStartViewController : UIViewController
 	{
-		// ...
-		
+		public QuickStartViewController (IntPtr handle) : base (handle) {}
+
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
 
-			this.Bind(new ViewModel());
+			this.Bind(new QuickStartViewModel());
 		}
 
 		public override void ViewWillAppear(bool animated)
@@ -132,29 +141,11 @@ You have two options for declaring your bindings : **XML** or **Pseudo-CSharp**.
 
 The files must be suffixed by `.Bind.xml`.
 
-##### Example :
-
-```xml
-<Bindings Visibility="Inner" Converter="StaticBind.Sample.Views.iOS.Converter">
-
-    <Source Class="StaticBind.Sample.ViewModels.ViewModel">
-        <Property From="Title" To="entryField.Text" />
-        <Property From="Header.Date" To="dateLabel.Text" Converter="DateToString" />
-        <Property From="Title" To="titleLabel.Text" />
-        <Command From="UpdateCommand" To="button" IsEnabled="Enabled" ExecuteWhen="EventHandler:TouchUpInside"
-    </Source>
-
-    <Target Class="StaticBind.Sample.Views.iOS.ViewController">
-        <Property From="entryField.Text" To="Title" When="EventHandler:EditingChanged" />
-    </Target>
-
-</Bindings>
-```
 [Documentation](Documentation/Lang_xml.md)
 
 ### Pseudo-CSharp (*experimental*)
 
-[Documentation](Documentation/Lang_csharp.md)
+*WIP*
 
 ## Generated code
 

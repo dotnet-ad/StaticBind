@@ -117,6 +117,9 @@
 						this.Generate("this", "source", bindings.Target, bindings.Source, targetProperties, sourceProperties);
 						this.Generate("source", "this", bindings.Source, bindings.Target, sourceProperties, targetProperties);
 						this.AppendLine("");
+						this.AppendLine($"this_root.Source = this;");
+						this.AppendLine($"source_root.Source = source;");
+						this.AppendLine("");
 						this.AppendLine($"this.Bindings = new Bindings<{bindings.Source.ClassFullname}, {bindings.Target.ClassFullname}>(source_root, this_root);");
 
 					});

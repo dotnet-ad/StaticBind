@@ -15,7 +15,7 @@
 	{
 		#region Constructors
 
-		public Accessor(TSource initial, Expression<Func<TSource, TProperty>> name)
+		public Accessor(Expression<Func<TSource, TProperty>> name)
 		{
 			if (name == null)
 			{
@@ -29,16 +29,13 @@
 				this.Name = expression.Member.Name;
 				this.Getter = CreateGetter(this.Name);
 			}
-
-			this.Source = initial;
 		}
 
-		public Accessor(TSource initial, string name, Func<TSource, TProperty> getter, Action<TSource, TProperty> setter)
+		public Accessor(string name, Func<TSource, TProperty> getter, Action<TSource, TProperty> setter)
 		{
 			this.Name = name;
 			this.Getter = getter;
 			this.setter = setter;
-			this.Source = initial;
 		}
 
 		#endregion
