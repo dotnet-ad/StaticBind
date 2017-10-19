@@ -16,7 +16,7 @@
   </metadata>
    <files>
      <!-- Standard -->
-     <file src="..\Sources\StaticBind.Build\bin\Release\netstandard1.3\StaticBind.dll" target="lib\netstandard1.3\StaticBind.dll" />
+     <file src="..\Sources\StaticBind\bin\Release\netstandard1.3\StaticBind.dll" target="lib\netstandard1.3\StaticBind.dll" />
 		 <file src="..\Sources\StaticBind.Build\bin\Release\netstandard1.3\StaticBind.targets" target="build\netstandard1.3\StaticBind.targets"/>
      <file src="..\Sources\StaticBind.Build\bin\Release\netstandard1.3\StaticBind.Build.dll" target="build\netstandard1.3\StaticBind.Build.dll" />
    </files>
