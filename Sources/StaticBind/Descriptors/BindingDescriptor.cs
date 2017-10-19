@@ -3,25 +3,66 @@ using System.Linq.Expressions;
 
 namespace StaticBind.Descriptors
 {
+	/** 
+	 *   [Bindings]
+	 *   private object BindingDescriptors => 
+	 * 		this.CreateBindings()
+	 * 			.Source<ViewModels.ViewModel>()
+	 * 				.Property(vm => vm.Title, v => v.label.Text)
+	 * 			.Target()
+	 * 				.Property(vm => v.field.Text, v => v.title, When<System.EventHandler>(nameof(EditingChanged));
+	 *   
+	 * 
+	 */
+
+	public class Target<TTo>
+	{
+		public Source<TFrom, TTo> Source<TFrom>()
+			=> throw DescriptorExtensions.Error;
+	}
+
+	public class Source<TFrom,TTo>
+	{
+		public Source<TFrom, TTo> Property<T>(Expression<Func<TFrom,T>> from, Expression<Func<TTo,T>> to) 
+			=> throw DescriptorExtensions.Error;
+
+		public Source<TFrom, TTo> Property<T, THandler>(Expression<Func<TFrom,T>> from, Expression<Func<TTo,T>> to, When<THandler> when) 
+			=> throw DescriptorExtensions.Error;
+
+		public Source<TFrom, TTo> Property<TFromValue,TToValue>(Expression<Func<TFrom,TFromValue>> from, Expression<Func<TTo,TToValue>> to, Conversion<TFromValue,TToValue> converter)
+			=> throw DescriptorExtensions.Error;
+
+		public Source<TFrom, TTo> Property<TFromValue, TToValue, THandler>(Expression<Func<TFrom, TFromValue>> from, Expression<Func<TTo, TToValue>> to, Conversion<TFromValue, TToValue> converter, When<THandler> when)
+			=> throw DescriptorExtensions.Error;
+
+		public Source<TTo, TFrom> Target() 
+			=> throw DescriptorExtensions.Error;
+	}
+
+	public static class DescriptorExtensions
+	{
+		internal static Exception Error => new NotSupportedException("Descriptors should never be executed!");
+
+		public static Target<TTo> CreateBindings<TTo>(this TTo target) 
+			=> throw Error;
+	}
+
+
 	public static class Conversion
 	{
 		public static Conversion<TFrom, TTo> Value<TFrom,TTo>(Func<TFrom,TTo> converter)
 		{
-			throw BindingDescriptor.Error;
+			throw DescriptorExtensions.Error;
 		}
 	}
 
 	public class When
 	{
 		public  static When<THandler> Event<THandler>(string name)
-		{
-			throw BindingDescriptor.Error;
-		}
+			 => throw DescriptorExtensions.Error;
 
-		public static When<EventHandler> Event(string name)
-		{
-			throw BindingDescriptor.Error;
-		}
+		public static When<EventHandler> Event(string name) 
+			=> throw DescriptorExtensions.Error;
 	}
 
 	public class When<THandler> 
@@ -32,30 +73,5 @@ namespace StaticBind.Descriptors
 	public class Conversion<TFrom,TTo> 	
 	{
 		private Conversion() {} 
-	}
-
-	public static class BindingDescriptor
-	{
-		internal static Exception Error => new NotSupportedException("Descriptors should never be executed!");
-
-		public static object Bind<T>(this object target, Expression<Func<T>> from, Expression<Func<T>> to)
-		{
-			throw Error;
-		}
-
-		public static object Bind<TFrom, TTo>(this object target, Expression<Func<TFrom>> from, Expression<Func<TTo>> to, Conversion<TFrom,TTo> converter)
-		{
-			throw Error;
-		}
-
-		public static object Bind<T,THandler>(this object target, Expression<Func<T>> from, Expression<Func<T>> to, When<THandler> when)
-		{
-			throw Error;
-		}
-
-		public static object Bind<TFrom, TTo, THandler>(this object target, Expression<Func<TFrom>> from, Expression<Func<TTo>> to, Conversion<TFrom, TTo> converter, When<THandler> when)
-		{
-			throw Error;
-		}
 	}
 }

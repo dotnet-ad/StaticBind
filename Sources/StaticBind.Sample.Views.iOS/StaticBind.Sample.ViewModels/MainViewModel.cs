@@ -7,9 +7,7 @@
 	{
 		public MainViewModel()
 		{
-			this.UpdateProperties = new RelayCommand(ExecuteUpdateProperties, () => this.Header != null);
-
-			this.UpdateWhole = new RelayCommand(ExecuteUpdateWhole, () => this.Header == null);
+			this.UpdateCommand = new RelayCommand(ExecuteUpdateCommand, () => this.Header == null);
 		}
 
 		private string entry;
@@ -32,8 +30,7 @@
 					if (state.NewValue != null)
 						state.NewValue.PropertyChanged += OnHeaderPropertyChanged;
 
-					this.UpdateWhole.RaiseCanExecuteChanged();
-					this.UpdateProperties.RaiseCanExecuteChanged();
+					this.UpdateCommand.RaiseCanExecuteChanged();
 				}
 			}
 		}
@@ -46,22 +43,13 @@
 			}
 		}
 
-		public void ExecuteUpdateWhole()
+		public void ExecuteUpdateCommand()
 		{
 			this.Header = new HeaderItemViewModel()
 			{
 				Title = "Whole update",
 				Date = DateTime.Now,
 			};
-		}
-
-		public void ExecuteUpdateProperties()
-		{
-			if(this.header != null)
-			{
-				this.header.Title = "Property update";
-				this.header.Date = DateTime.Now;
-			}
 		}
 
 		public string Entry
@@ -76,8 +64,6 @@
 			}
 		}
 
-		public RelayCommand UpdateProperties { get; }
-
-		public RelayCommand UpdateWhole { get; }
+		public RelayCommand UpdateCommand { get; }
 	}
 }

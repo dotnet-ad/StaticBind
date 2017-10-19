@@ -10,7 +10,7 @@
 	{
 		#region Bind
 
-		private bool ParseBindingEvent(Bind result, ArgumentSyntax syntax)
+		private bool ParseBindingEvent(Property result, ArgumentSyntax syntax)
 		{
 			if (syntax?.Expression is InvocationExpressionSyntax invoke)
 			{
@@ -69,7 +69,7 @@
 			throw new InvalidOperationException("Invalid member access expression");
 		}
 
-		private bool ParseBindingConverter(Bind result, ArgumentSyntax syntax, string converterName)
+		private bool ParseBindingConverter(Property result, ArgumentSyntax syntax, string converterName)
 		{
 			if (syntax?.Expression is InvocationExpressionSyntax invoke)
 			{
@@ -137,7 +137,7 @@
 			if (fromArg.Item1 == toArg.Item1)
 				throw new InvalidOperationException("The source and target must be different.");
 
-			var bind = new Bind { From = fromArg.Item2, To = toArg.Item2 }; 
+			var bind = new Property { From = fromArg.Item2, To = toArg.Item2 }; 
 
 			if(args.Arguments.Count == 3 && (ParseBindingEvent(bind, args.Arguments.ElementAtOrDefault(2)) || ParseBindingConverter(bind, args.Arguments.ElementAtOrDefault(2),converterName))) {}
 			else if (args.Arguments.Count == 4 && ParseBindingEvent(bind, args.Arguments.ElementAtOrDefault(2)) && ParseBindingConverter(bind, args.Arguments.ElementAtOrDefault(3), converterName)) {}
@@ -191,7 +191,7 @@
 			result.Source = new Target()
 			{
 				ClassFullname = ParseFulltype(arg.Type),
-				Bindings = new System.Collections.Generic.List<Bind>(),
+				Bindings = new System.Collections.Generic.List<Property>(),
 			};
 
 			var conv = method.ParameterList.Parameters.ElementAtOrDefault(1);
@@ -219,7 +219,7 @@
 			result.Target = new Target()
 			{
 				ClassFullname = $"{ns.Name.GetText().ToString().Trim()}.{classNode.Identifier.Text}",
-				Bindings = new System.Collections.Generic.List<Bind>(),
+				Bindings = new System.Collections.Generic.List<Property>(),
 			};
 
 			var method = classNode.DescendantNodes()

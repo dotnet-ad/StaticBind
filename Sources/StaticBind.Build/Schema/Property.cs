@@ -3,8 +3,8 @@ using System.Linq;
 
 namespace StaticBind.Build
 {
-	[XmlRoot("Bind")]
-	public class Bind
+	[XmlRoot("Property")]
+	public class Property
 	{
 		[XmlAttribute("From")]
 		public string From { get; set; }

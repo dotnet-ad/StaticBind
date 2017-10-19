@@ -12,12 +12,12 @@
 
 		partial void onWholeClick(Foundation.NSObject sender)
 		{
-			this.Bindings.Source.UpdateWhole.Execute(null);
+			//this.Bindings.Source.UpdateWhole.Execute(null);
 		}
 
 		partial void onPropertyClick(Foundation.NSObject sender)
 		{
-			this.Bindings.Source.UpdateProperties.Execute(null);
+			//this.Bindings.Source.UpdateProperties.Execute(null);
 		}
 
 		public override void ViewDidLoad()

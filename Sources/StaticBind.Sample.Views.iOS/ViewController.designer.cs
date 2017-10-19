@@ -21,6 +21,12 @@ namespace StaticBind.Sample.Views.iOS
 		[Outlet]
 		UIKit.UITextField entryField { get; set; }
 
+		[Outlet]
+		UIKit.UIButton propertyButton { get; set; }
+
+		[Outlet]
+		UIKit.UIButton wholeButton { get; set; }
+
 		[Action ("onPropertyClick:")]
 		partial void onPropertyClick (Foundation.NSObject sender);
 
@@ -29,11 +35,6 @@ namespace StaticBind.Sample.Views.iOS
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (entryField != null) {
-				entryField.Dispose ();
-				entryField = null;
-			}
-
 			if (dateLabel != null) {
 				dateLabel.Dispose ();
 				dateLabel = null;
@@ -42,6 +43,21 @@ namespace StaticBind.Sample.Views.iOS
 			if (descriptionLabel != null) {
 				descriptionLabel.Dispose ();
 				descriptionLabel = null;
+			}
+
+			if (entryField != null) {
+				entryField.Dispose ();
+				entryField = null;
+			}
+
+			if (wholeButton != null) {
+				wholeButton.Dispose ();
+				wholeButton = null;
+			}
+
+			if (propertyButton != null) {
+				propertyButton.Dispose ();
+				propertyButton = null;
 			}
 		}
 	}

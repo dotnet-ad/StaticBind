@@ -17,7 +17,7 @@ namespace StaticBind.Sample.ViewModels
 
 	public class ViewModel : Observable, INotifyPropertyChanged
 	{
-		private string title;
+		private string title = "Initial title";
 
 		public string Title
 		{
@@ -60,15 +60,25 @@ namespace StaticBind.Sample.Views.iOS
 <Bindings Visibility="Inner">
 
     <Source Class="StaticBind.Sample.ViewModels.ViewModel">
-        <Bind From="Title" To="entryField.Text" />
-        <Bind From="Title" To="titleLabel.Text" />
+        <Property From="Title" To="entryField.Text" />
+        <Property From="Title" To="titleLabel.Text" />
     </Source>
 
     <Target Class="StaticBind.Sample.Views.iOS.ViewController">
-        <Bind From="entryField.Text" To="Title" When="EditingChanged" />
+        <Property From="entryField.Text" To="Title" When="EditingChanged" />
     </Target>
 
 </Bindings>
+```
+
+**Bonus**
+
+You can *attach* your binding file to your view file by adding a `DependentUpon` tag inside your `.csproj`.
+
+```xml
+<None Include="ViewController.Bind.xml">
+  <DependentUpon>ViewController.cs</DependentUpon>
+</None>
 ```
 
 **3)** Build the project to generate the binding code.
@@ -128,13 +138,14 @@ The files must be suffixed by `.Bind.xml`.
 <Bindings Visibility="Inner" Converter="StaticBind.Sample.Views.iOS.Converter">
 
     <Source Class="StaticBind.Sample.ViewModels.ViewModel">
-        <Bind From="Title" To="entryField.Text" />
-        <Bind From="Header.Date" To="dateLabel.Text" Converter="DateToString" />
-        <Bind From="Title" To="titleLabel.Text" />
+        <Property From="Title" To="entryField.Text" />
+        <Property From="Header.Date" To="dateLabel.Text" Converter="DateToString" />
+        <Property From="Title" To="titleLabel.Text" />
+        <Command From="UpdateCommand" To="button" IsEnabled="Enabled" ExecuteWhen="EventHandler:TouchUpInside"
     </Source>
 
     <Target Class="StaticBind.Sample.Views.iOS.ViewController">
-        <Bind From="entryField.Text" To="Title" When="EventHandler:EditingChanged" />
+        <Property From="entryField.Text" To="Title" When="EventHandler:EditingChanged" />
     </Target>
 
 </Bindings>
@@ -145,8 +156,19 @@ The files must be suffixed by `.Bind.xml`.
 
 [Documentation](Documentation/Lang_csharp.md)
 
+## Generated code
+
+All the generated code is based onto an including thin layer responsable for observing your source state. All thoses entities are available inside `StaticBind.dll` that is referenced by your project when referencing the NuGet package.
+
+All the intermediate code is available in the intermediate output folder (generally `obj`).
+
 ## Roadmap / Ideas
 
+* [ ] IsEnabled converter (bool -> T)
+* [ ] Command parameter
+* [ ] Samples
+	* [X] iOS
+	* [ ] Android 
 * [ ] Create plugins to add auto-completion for the XML language.
 	* [ ] Visual Studio for Mac 
 	* [ ] Visual Studio 2017 

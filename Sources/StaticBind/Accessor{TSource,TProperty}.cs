@@ -3,10 +3,14 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
-	using System.Collections;
 	using System.ComponentModel;
 	using System.Diagnostics;
 
+	/// <summary>
+	/// An accessor to a property from a source. It stops evaluation when the source is null instead of crashing. It also
+	/// auto evaluates its value when the source implements INotifyPropertyChanged and raises a change on the associated
+	/// property name.
+	/// </summary>
 	public class Accessor<TSource, TProperty> : IAccessor<TSource, TProperty>
 	{
 		#region Constructors
@@ -49,9 +53,9 @@
 
 		private Action<TSource, TProperty> setter;
 
-		private List<Action<TSource, Action>> subscribers = new List<Action<TSource, Action>>();
+		protected List<Action<TSource, Action>> subscribers = new List<Action<TSource, Action>>();
 
-		private List<Action<TSource>> unsubscribers = new List<Action<TSource>>();
+		protected List<Action<TSource>> unsubscribers = new List<Action<TSource>>();
 
 		#endregion
 
@@ -75,13 +79,18 @@
 
 		public string Name { get; }
 
+		public bool HasSource => !EqualityComparer<TSource>.Default.Equals(this.Source, default(TSource));
+
 		public TProperty Value
 		{
 			get => this.value;
 			set
 			{
-				if (this.Source != null && !EqualityComparer<TProperty>.Default.Equals(this.Getter(this.Source), value)) ;
-				this.Setter(this.Source, value);
+				if (this.HasSource && !EqualityComparer<TProperty>.Default.Equals(this.Getter(this.Source), value))
+				{
+					this.Setter(this.Source, value);
+				}
+
 				this.SetValue(value);
 			}
 		}
@@ -100,6 +109,11 @@
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is active. This property must be updated to unregister
+		/// events whenever it is possible.
+		/// </summary>
+		/// <value><c>true</c> if is active; otherwise, <c>false</c>.</value>
 		public bool IsActive
 		{
 			get => this.isActive;
@@ -125,19 +139,19 @@
 
 		#region Private methods
 
-		private bool SetValue(TProperty value)
+		private bool SetValue(TProperty v)
 		{
-			if (!EqualityComparer<TProperty>.Default.Equals(value, this.Value))
+			if (!EqualityComparer<TProperty>.Default.Equals(v, this.Value))
 			{
 				var wasActive = this.IsActive;
-				Debug.WriteLine($"[{this.Name}] Value changed : {value}");
+				Debug.WriteLine($"[{this.Name}] Value changed : {v}");
 				this.IsActive = false;
-				this.value = value;
+				this.value = v;
 				if (wasActive)
 				{
 					this.IsActive = true;
 				}
-				this.ValueChanged?.Invoke(this, value);
+				this.ValueChanged?.Invoke(this, v);
 				return true;
 			}
 
@@ -206,6 +220,12 @@
 
 		#region Public methods
 
+		/// <summary>
+		/// Subscribe an event to indicate when to evaluate the value.
+		/// </summary>
+		/// <returns>The when.</returns>
+		/// <param name="subscribe">Subscribe.</param>
+		/// <param name="unsubscribe">Unsubscribe.</param>
 		public Accessor<TSource, TProperty> ChangeWhen(Action<TSource, Action> subscribe, Action<TSource> unsubscribe)
 		{
 			this.subscribers.Add(subscribe);
@@ -219,12 +239,20 @@
 			return this;
 		}
 
+		/// <summary>
+		/// Evaluate this value from the source value.
+		/// </summary>
 		public void Evaluate()
 		{
-			var value = this.Source != null ? Getter(this.Source) : default(TProperty);
-			this.SetValue(value);
+			var v = this.HasSource ? Getter(this.Source) : default(TProperty);
+			this.SetValue(v);
 		}
 
+		/// <summary>
+		/// Registers an action that will be executed each time the value changes.
+		/// </summary>
+		/// <returns>The change.</returns>
+		/// <param name="onChange">On change.</param>
 		public virtual Accessor<TSource, TProperty> OnChange(Action<TProperty> onChange)
 		{
 			this.ValueChanged += (sender, e) => onChange(e);

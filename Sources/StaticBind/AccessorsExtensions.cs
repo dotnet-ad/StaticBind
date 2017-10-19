@@ -11,24 +11,19 @@ namespace StaticBind
 			return new Accessor<TSource>(source);
 		}
 
-		public static Accessor<TProperty, TSubProperty> Then<TSource, TProperty, TSubProperty>(this Accessor<TSource, TProperty> parent, Expression<Func<TProperty, TSubProperty>> name)
+		public static Accessor<TProperty, TSubProperty> Property<TSource, TProperty, TSubProperty>(this Accessor<TSource, TProperty> parent, Expression<Func<TProperty, TSubProperty>> name)
 		{
 			return new ChildAccessor<TSource, TProperty, TSubProperty>(parent, name);
 		}
 
-		public static Accessor<TProperty, TSubProperty> Then<TSource, TProperty, TSubProperty>(this Accessor<TSource, TProperty> parent, string name, Func<TProperty, TSubProperty> getter, Action<TProperty,TSubProperty> setter)
+		public static Accessor<TProperty, TSubProperty> Property<TSource, TProperty, TSubProperty>(this Accessor<TSource, TProperty> parent, string name, Func<TProperty, TSubProperty> getter, Action<TProperty,TSubProperty> setter = null)
 		{
 			return new ChildAccessor<TSource, TProperty, TSubProperty>(parent, name, getter, setter);
 		}
 
-		public static CommandAccessor<TSource, TProperty, TSubProperty> Command<TSource, TProperty, TSubProperty>(this Accessor<TSource, TProperty> parent, Expression<Func<TProperty, TSubProperty>> name) where TSubProperty : ICommand
+		public static CommandTrigger<TSource, TCommandProperty, TTarget, TTargetProperty> Command<TSource, TCommandProperty, TTarget, TTargetProperty>(this Accessor<TSource, TCommandProperty> parent, Accessor<TTarget,TTargetProperty> target) where TCommandProperty : ICommand
 		{
-			return new CommandAccessor<TSource, TProperty, TSubProperty>(parent, name);
-		}
-
-		public static CommandAccessor<TSource, TProperty, TSubProperty> Command<TSource, TProperty, TSubProperty>(this Accessor<TSource, TProperty> parent, string name, Func<TProperty, TSubProperty> getter, Action<TProperty, TSubProperty> setter) where TSubProperty : ICommand
-		{
-			return new CommandAccessor<TSource, TProperty, TSubProperty>(parent, name, getter, setter);
+			return new CommandTrigger<TSource, TCommandProperty, TTarget, TTargetProperty>(parent, target);
 		}
 	}
 }

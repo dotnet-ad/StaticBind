@@ -48,8 +48,8 @@ namespace StaticBind.Build
 
 		protected Generator CloseBody()
 		{
-			this.AppendLine("}");
 			scope--;
+			this.AppendLine("}");
 			return this;
 		}
 

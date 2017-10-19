@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="ViewControllers\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
@@ -129,7 +130,6 @@
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
     <None Include="packages.config" />
-    <None Include="ViewController.Bind.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -138,8 +138,21 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="ViewController.Bind.cs" />
+	<None Include="ViewController.Bind.xml">
+      <DependentUpon>ViewController.cs</DependentUpon>
+    </None>
     <Compile Include="Converter.cs" />
+    <Compile Include="ViewControllers\MenuViewController.cs" />
+    <Compile Include="ViewControllers\MenuViewController.designer.cs">
+      <DependentUpon>MenuViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\QuickStartViewController.cs" />
+    <Compile Include="ViewControllers\QuickStartViewController.designer.cs">
+      <DependentUpon>QuickStartViewController.cs</DependentUpon>
+    </Compile>
+    <None Include="ViewControllers\QuickStartViewController.Bind.xml">
+      <DependentUpon>QuickStartViewController.cs</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="StaticBind.Sample.ViewModels\StaticBind.Sample.ViewModels.csproj">

@@ -1,14 +1,16 @@
 ﻿<Bindings Visibility="Inner" Converter="StaticBind.Sample.Views.iOS.Converter">
 
     <Source Class="StaticBind.Sample.ViewModels.MainViewModel">
-        <Bind From="Entry" To="entryField.Text" />
-        <Bind From="Header.Date" To="dateLabel.Text" Converter="DateToString" />
-        <Bind From="Header.Title" To="Title" />
-        <Bind From="Header.Title" To="descriptionLabel.Text" />
+        <Property From="Entry" To="entryField.Text" />
+        <Property From="Header.Date" To="dateLabel.Text" Converter="DateToString" />
+        <Property From="Header.Title" To="Title" />
+        <Property From="Header.Title" To="descriptionLabel.Text" />
+		<Command From="UpdateCommand" To="wholeButton" IsEnabled="Enabled" ExecuteWhen="EventHandler:TouchUpInside" />
+        <Command From="Header.UpdateCommand" To="propertyButton" IsEnabled="Enabled" ExecuteWhen="EventHandler:TouchUpInside" />
     </Source>
 
     <Target Class="StaticBind.Sample.Views.iOS.ViewController">
-        <Bind From="entryField.Text" To="Entry" When="EventHandler:EditingChanged" />
+        <Property From="entryField.Text" To="Entry" When="EventHandler:EditingChanged" />
     </Target>
 
 </Bindings>

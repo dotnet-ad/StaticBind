@@ -7,6 +7,7 @@
 	{
 		public HeaderItemViewModel()
 		{
+			this.UpdateCommand = new RelayCommand(ExecuteUpdateCommand);
 		}
 
 		private string title;
@@ -23,6 +24,14 @@
 		{
 			get => this.date;
 			set => this.Set(ref this.date, value);
+		}
+
+		public RelayCommand UpdateCommand { get; }
+
+		public void ExecuteUpdateCommand()
+		{
+			this.Title = "Property update";
+			this.Date = DateTime.Now;
 		}
 	}
 }

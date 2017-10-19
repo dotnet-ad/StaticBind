@@ -10,8 +10,8 @@
 		[XmlAttribute("Class")]
 		public string ClassFullname { get; set; }
 
-		[XmlElement("Bind")]
-		public List<Bind> Bindings { get; set; }
+		[XmlElement("Property")]
+		public List<Property> Bindings { get; set; }
 
 		[XmlElement("Command")]
 		public List<Command> Commands { get; set; }

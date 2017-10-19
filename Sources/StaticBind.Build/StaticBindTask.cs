@@ -56,6 +56,13 @@
 			Log.LogMessage("Generation C# file ...");
 			var generator = new CSharpGenerator();
 			var outputCode = generator.Generate(bindings);
+
+			var dir = Path.GetDirectoryName(this.OutputFile);
+			if(!Directory.Exists(dir))
+			{
+				Directory.CreateDirectory(dir);
+			}
+
 			File.WriteAllText(this.OutputFile, outputCode);
 		}
 
